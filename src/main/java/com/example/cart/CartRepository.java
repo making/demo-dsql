@@ -29,7 +29,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@RegisterReflectionForBinding({ Cart.class })
+@RegisterReflectionForBinding(Cart.class)
 public class CartRepository {
 
 	private final JdbcClient jdbcClient;
