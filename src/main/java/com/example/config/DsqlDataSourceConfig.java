@@ -25,12 +25,15 @@ import java.util.function.Supplier;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aot.hint.ExecutableMode;
+import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -47,6 +50,7 @@ import software.amazon.awssdk.services.dsql.model.GenerateAuthTokenRequest;
 
 @Configuration(proxyBeanMethods = false)
 @Profile("!testcontainers")
+@ImportRuntimeHints(DsqlDataSourceConfig.RuntimeHints.class)
 public class DsqlDataSourceConfig {
 
 	private final Logger logger = LoggerFactory.getLogger(DsqlDataSourceConfig.class);
@@ -153,6 +157,24 @@ public class DsqlDataSourceConfig {
 				return Override.DO_NOT_EVICT;
 			}
 			return Override.CONTINUE_EVICT;
+		}
+
+	}
+
+	static class RuntimeHints implements RuntimeHintsRegistrar {
+
+		@Override
+		public void registerHints(org.springframework.aot.hint.RuntimeHints hints, ClassLoader classLoader) {
+			try {
+				hints.reflection()
+					.registerConstructor(DsqlExceptionOverride.class.getDeclaredConstructors()[0],
+							ExecutableMode.INVOKE)
+					.registerConstructor(Class.forName("org.postgresql.ssl.DefaultJavaSSLFactory").getConstructors()[0],
+							ExecutableMode.INVOKE);
+			}
+			catch (Exception e) {
+				throw new IllegalStateException(e);
+			}
 		}
 
 	}
