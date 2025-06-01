@@ -47,6 +47,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.regions.providers.AwsRegionProvider;
 import software.amazon.awssdk.services.dsql.DsqlUtilities;
 import software.amazon.awssdk.services.dsql.model.GenerateAuthTokenRequest;
+import software.amazon.awssdk.services.sso.auth.SsoProfileCredentialsProviderFactory;
 
 @Configuration(proxyBeanMethods = false)
 @Profile("!testcontainers")
@@ -170,6 +171,8 @@ public class DsqlDataSourceConfig {
 					.registerConstructor(DsqlExceptionOverride.class.getDeclaredConstructors()[0],
 							ExecutableMode.INVOKE)
 					.registerConstructor(Class.forName("org.postgresql.ssl.DefaultJavaSSLFactory").getConstructors()[0],
+							ExecutableMode.INVOKE)
+					.registerConstructor(SsoProfileCredentialsProviderFactory.class.getConstructors()[0],
 							ExecutableMode.INVOKE);
 			}
 			catch (Exception e) {
