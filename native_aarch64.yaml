@@ -1,2 +1,2 @@
-image: ghcr.io/making/demo-dsql@sha256:baea888169f6f955bb2351524ff266bdefdda112980dcc065e0f961fe34c82ed
-git_revision: 18d69972acd5998f708cefb54d8430c63f59b2af
+image: ghcr.io/making/demo-dsql@sha256:51d23b5741441db9a1c3ece425f0b3b3493f9c5a5a091104c0d2080a3838a551
+git_revision: 77d99e182232b0718388869d5f4e0e22790ecfb2
